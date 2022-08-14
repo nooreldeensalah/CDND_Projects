@@ -29,14 +29,33 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
   /**************************************************************************** */
 
+  app.get('/filteredimage', async (req, res) => {
+    
+    const { image_url }: {image_url: string} = req.query;
+
+    if (!image_url)
+    {
+      return res.status(422).send({message: "Bad request, please supply image_url as a query parameter"})
+    }
+
+    const filteredImagePath : string = await filterImageFromURL(image_url)
+
+    res.status(200).sendFile(filteredImagePath, (err) => {
+      if (err)
+      {
+        res.status(500).end(err)
+      }
+      deleteLocalFiles([filteredImagePath])
+    })
+
+  })
   //! END @TODO1
   
   // Root Endpoint
   // Displays a simple message to the user
   app.get( "/", async ( req, res ) => {
     res.send("try GET /filteredimage?image_url={{}}")
-  } );
-  
+  });
 
   // Start the Server
   app.listen( port, () => {
