@@ -7,6 +7,7 @@ plugins:
   - serverless-iam-roles-per-function
   - serverless-aws-documentation
   - serverless-plugin-tracing
+  - serverless-reqvalidator-plugin
 
 provider:
   name: aws
@@ -85,6 +86,7 @@ functions:
           path: todos
           cors: true
           authorizer: Auth
+          reqValidatorName: RequestBodyValidator
           documentation:
             summary: Create a new To-Do list item
             description: Create a new To-Do list item
@@ -103,6 +105,7 @@ functions:
           path: todos/{todoId}
           cors: true
           authorizer: Auth
+          reqValidatorName: RequestBodyValidator
           documentation:
             summary: Update a To-Do list item
             description: Update a To-Do list item
@@ -194,6 +197,15 @@ resources:
                 - DELETE
                 - HEAD
               MaxAge: ${self:provider.environment.SIGNED_URL_EXPIRATION}
+
+    RequestBodyValidator:
+      Type: AWS::ApiGateway::RequestValidator
+      Properties:
+        Name: 'request-body-validator'
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        ValidateRequestBody: true
+        ValidateRequestParameters: false
 
     BucketPolicy:
       Type: AWS::S3::BucketPolicy
