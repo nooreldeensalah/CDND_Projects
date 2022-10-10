@@ -98,6 +98,9 @@ functions:
             description: Create a new To-Do list item
             requestModels:
               'application/json': CreateTodoRequest
+          request:
+            schemas:
+              application/json: ${file(models/create-todo-model.json)}
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -118,6 +121,9 @@ functions:
             description: Update a To-Do list item
             requestModels:
               'application/json': UpdateTodoRequest
+          request:
+            schemas:
+              application/json: ${file(models/update-todo-model.json)}
     iamRoleStatements:
       - Effect: Allow
         Action:
