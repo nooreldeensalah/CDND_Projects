@@ -22,7 +22,7 @@ export const handler = middy(
       }
     } catch (error) {
       return {
-        statusCode: error.code,
+        statusCode: error.status,
         body: error.message
       }
     }
