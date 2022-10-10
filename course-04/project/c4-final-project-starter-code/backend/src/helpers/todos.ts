@@ -59,11 +59,5 @@ export async function getTodosForUser(userId: string): Promise<TodoItem[]> {
 }
 
 export async function createAttachmentPresignedUrl(todoId: string) {
-  const bucketName = attachmentUtils.getBucketName()
-  const urlExpiration = process.env.SIGNED_URL_EXPIRATION
-  return attachmentUtils.getPresignedUploadURL(
-    bucketName,
-    todoId,
-    parseInt(urlExpiration)
-  )
+  return attachmentUtils.getPresignedUploadURL(todoId)
 }
