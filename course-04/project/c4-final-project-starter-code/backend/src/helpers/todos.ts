@@ -7,16 +7,63 @@ import { createLogger } from '../utils/logger'
 import * as uuid from 'uuid'
 import * as createError from 'http-errors'
 
-// TODO: Implement businessLogic
 const logger = createLogger('todos-BusinessLogic')
 const todosAccess = new TodosAccess()
+const attachmentUtils = new AttachmentUtils()
 
-export async function createTodo(params: type) {}
+export async function createTodo(
+  CreateTodoRequest: CreateTodoRequest,
+  userId: string
+) {
+  logger.info('Creating an item')
+  const itemId = uuid.v4()
+  const todoItem: TodoItem = {
+    userId,
+    createdAt: new Date().toISOString(),
+    todoId: itemId,
+    done: false,
+    attachmentUrl: `https://${process.env.ATTACHMENT_S3_BUCKET}.s3.amazonaws.com/${itemId}`,
+    ...CreateTodoRequest
+  }
 
-export async function deleteTodo(params: type) {}
+  return await todosAccess.createTodo(todoItem, userId)
+}
 
-export async function updateTodo(params: type) {}
+export async function deleteTodo(todoId: string, userId: string) {
+  const todoExists = await todosAccess.getTodo(todoId, userId)
+  if (!todoExists) {
+    logger.warn('Failed to delete an item')
+    throw createError(404, "Todo item doesn't exist!")
+  }
+  return await todosAccess.deleteTodo(todoId, userId)
+}
 
-export async function getTodosForUser(params: type) {}
+export async function updateTodo(
+  UpdateTodoRequest: UpdateTodoRequest,
+  todoId: string,
+  userId: string
+) {
+  const todoExists = await todosAccess.getTodo(todoId, userId)
+  if (!todoExists) {
+    logger.warn('Failed to update an item')
+    throw createError(404, "Todo item doesn't exist!")
+  }
+  return await todosAccess.updateTodo(todoId, userId, UpdateTodoRequest)
+}
 
-export async function createAttachmentPresignedUrl(params: type) {}
+export async function getTodosForUser(userId: string): Promise<TodoItem[]> {
+  logger.info('Retrieving all items')
+
+  const todos = await todosAccess.getAllTodos(userId)
+  return todos
+}
+
+export async function createAttachmentPresignedUrl(todoId: string) {
+  const bucketName = attachmentUtils.getBucketName()
+  const urlExpiration = process.env.SIGNED_URL_EXPIRATION
+  return attachmentUtils.getPresignedUploadURL(
+    bucketName,
+    todoId,
+    parseInt(urlExpiration)
+  )
+}
