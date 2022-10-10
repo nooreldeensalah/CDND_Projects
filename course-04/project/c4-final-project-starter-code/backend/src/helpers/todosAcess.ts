@@ -69,7 +69,11 @@ export class TodosAccess {
       .promise()
   }
 
-  async updateTodo(todoId: string, userId: string, todoUpdate: TodoUpdate): Promise<void> {
+  async updateTodo(
+    todoId: string,
+    userId: string,
+    todoUpdate: TodoUpdate
+  ): Promise<void> {
     logger.info(`Updating Todo item ${todoId} for user ${userId}`)
     await this.docClient
       .update({

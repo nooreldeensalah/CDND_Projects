@@ -58,6 +58,7 @@ export async function getTodosForUser(userId: string): Promise<TodoItem[]> {
   return todos
 }
 
-export async function createAttachmentPresignedUrl(todoId: string) {
+export async function createAttachmentPresignedUrl(todoId: string, userId: string) {
+  logger.info(`Getting pre-signed url for item ${todoId} for user ${userId}`)
   return attachmentUtils.getPresignedUploadURL(todoId)
 }
