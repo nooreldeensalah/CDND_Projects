@@ -3,9 +3,9 @@ import 'source-map-support/register'
 
 import { verify, decode } from 'jsonwebtoken'
 import { createLogger } from '../../utils/logger'
-import Axios from 'axios'
 import { Jwt } from '../../auth/Jwt'
 import { JwtPayload } from '../../auth/JwtPayload'
+import * as jwksClient from 'jwks-rsa'
 
 const logger = createLogger('auth')
 
@@ -61,9 +61,15 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
     throw new Error('Invalid token')
   }
 
-  const response = await Axios.get(jwksUrl)
+  const client = jwksClient({
+    jwksUri: jwksUrl
+  })
 
-  return verify(token, response.data, { algorithms: ['RS256'] }) as JwtPayload
+  const { kid } = jwt.header
+  const key = await client.getSigningKey(kid)
+  const signingKey = key.getPublicKey()
+
+  return verify(token, signingKey, { algorithms: ['RS256'] }) as JwtPayload
 }
 
 function getToken(authHeader: string): string {
