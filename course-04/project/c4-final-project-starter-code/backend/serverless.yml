@@ -31,7 +31,7 @@ provider:
   environment:
     TODOS_TABLE: Todos-${self:provider.stage}
     TODOS_CREATED_AT_INDEX: CreatedAtIndex
-    ATTACHMENT_S3_BUCKET: nooreldeensalah-serverless-c4-todo-images-${self:provider.stage}
+    ATTACHMENT_S3_BUCKET: nooreldeensalah451--serverless-c4-todo-images-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
 
   logs:
@@ -129,7 +129,7 @@ functions:
     iamRoleStatements:
       - Effect: Allow
         Action:
-          - dynamodb:Query
+          - dynamodb:GetItem
           - dynamodb:UpdateItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
 
