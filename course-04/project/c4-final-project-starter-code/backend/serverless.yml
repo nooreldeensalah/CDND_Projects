@@ -1,6 +1,7 @@
 org: nooreldeensalah
 app: serverless-todo-app
 service: serverless-todo-app
+frameworkVersion: '2.21.1'
 
 plugins:
   - serverless-webpack
@@ -24,6 +25,9 @@ provider:
     lambda: true
     apiGateway: true
 
+  apiGateway:
+    shouldStartNameWithService: true
+
   environment:
     TODOS_TABLE: Todos-${self:provider.stage}
     TODOS_CREATED_AT_INDEX: CreatedAtIndex
@@ -34,14 +38,12 @@ provider:
     # Enable API Gateway logs
     restApi: true
 
-  iam:
-    role:
-      statements:
-        - Effect: Allow
-          Action:
-            - xray:PutTelemetryRecords
-            - xray:PutTraceSegments
-          Resource: '*'
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - xray:PutTelemetryRecords
+        - xray:PutTraceSegments
+      Resource: '*'
 
 custom:
   documentation:
@@ -99,7 +101,7 @@ functions:
             requestModels:
               'application/json': CreateTodoRequest
           request:
-            schemas:
+            schema:
               application/json: ${file(models/create-todo-model.json)}
     iamRoleStatements:
       - Effect: Allow
@@ -122,7 +124,7 @@ functions:
             requestModels:
               'application/json': UpdateTodoRequest
           request:
-            schemas:
+            schema:
               application/json: ${file(models/update-todo-model.json)}
     iamRoleStatements:
       - Effect: Allow
