@@ -9,8 +9,8 @@ plugins:
   - serverless-plugin-tracing
   - serverless-reqvalidator-plugin
 
-package:
-  individually: true
+# package:
+#   individually: true
 
 provider:
   name: aws
