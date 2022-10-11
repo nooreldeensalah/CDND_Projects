@@ -26,7 +26,8 @@ export async function createTodo(
     ...CreateTodoRequest
   }
 
-  return await todosAccess.createTodo(todoItem, userId)
+  await todosAccess.createTodo(todoItem, userId)
+  return todoItem
 }
 
 export async function deleteTodo(todoId: string, userId: string) {
