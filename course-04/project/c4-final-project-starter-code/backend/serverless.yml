@@ -69,7 +69,7 @@ functions:
           method: get
           path: todos
           cors: true
-          authorizer: Auth
+          # authorizer: Auth
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -91,7 +91,7 @@ functions:
           method: post
           path: todos
           cors: true
-          authorizer: Auth
+          # authorizer: Auth
           reqValidatorName: RequestBodyValidator
           documentation:
             summary: Create a new To-Do list item
@@ -114,7 +114,7 @@ functions:
           method: patch
           path: todos/{todoId}
           cors: true
-          authorizer: Auth
+          # authorizer: Auth
           reqValidatorName: RequestBodyValidator
           documentation:
             summary: Update a To-Do list item
@@ -138,7 +138,7 @@ functions:
           method: delete
           path: todos/{todoId}
           cors: true
-          authorizer: Auth
+          # authorizer: Auth
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -153,7 +153,7 @@ functions:
           method: post
           path: todos/{todoId}/attachment
           cors: true
-          authorizer: Auth
+          # authorizer: Auth
     iamRoleStatements:
       - Effect: Allow
         Action:
